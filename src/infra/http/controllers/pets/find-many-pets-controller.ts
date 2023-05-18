@@ -1,6 +1,6 @@
 import { PetAdapter } from '@/core/entities/pet-adapter'
 import { Pet } from '@/domain/enterprise/entities/pet'
-import { makeFindPetUseCase } from '@/infra/factories/make-find-pet-use-case'
+import { makePrismaFetchPetsUseCase } from '@/infra/factories/make-prisma-fetch-pets-use-case'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 
@@ -32,7 +32,7 @@ export class FindManyPetsController {
   }
 
   private async fetchPets(searchDTO: PetSchemaData) {
-    const findManyPetsUseCase = makeFindPetUseCase()
+    const findManyPetsUseCase = makePrismaFetchPetsUseCase()
     return findManyPetsUseCase.execute(searchDTO)
   }
 

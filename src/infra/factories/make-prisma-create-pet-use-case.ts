@@ -1,9 +1,9 @@
-import { CreatePetUseCase } from '@/domain/application/use-cases/create-pet'
 import { PrismaPetsRepository } from '../repositories/prisma-pets-repository'
 import { PrismaOrgsRepository } from '../repositories/prisma-orgs-repository'
+import { makeCreatePetUseCase } from '@/domain/application/use-cases/factories/make-create-pet-use-case'
 
-export function makePetUseCase() {
-  return new CreatePetUseCase(
+export function makePrismaCreatePetUseCase() {
+  return makeCreatePetUseCase(
     new PrismaPetsRepository(),
     new PrismaOrgsRepository(),
   )

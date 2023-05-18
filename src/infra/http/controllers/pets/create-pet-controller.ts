@@ -1,5 +1,5 @@
 import { PetAdapter } from '@/core/entities/pet-adapter'
-import { makePetUseCase } from '@/infra/factories/make-create-pet-use-case'
+import { makePrismaCreatePetUseCase } from '@/infra/factories/make-prisma-create-pet-use-case'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 
@@ -36,7 +36,7 @@ export class CreatePetController {
   }
 
   private async createPet(aPetDTO: PetSchemaData) {
-    const createPetUseCase = makePetUseCase()
+    const createPetUseCase = makePrismaCreatePetUseCase()
     return createPetUseCase.execute(aPetDTO)
   }
 }

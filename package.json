@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx ./src/main.ts",
+    "dev": "tsx --watch ./src/main.ts",
     "test": "vitest"
   },
   "keywords": [],
@@ -26,6 +26,7 @@
     "@fastify/multipart": "^7.6.0",
     "@fastify/static": "^6.10.1",
     "@prisma/client": "^4.14.0",
+    "dotenv": "^16.0.3",
     "fastify": "^4.17.0",
     "zod": "^3.21.4"
   }

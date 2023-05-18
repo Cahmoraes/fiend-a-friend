@@ -3,9 +3,13 @@ import fastifyJwt from '@fastify/jwt'
 import { PetsRoutes } from './routes/pet-routes'
 import { OrgsRoutes } from './routes/org-routes'
 import { SessionRoutes } from './routes/session-routes'
+import { env } from '@/env'
+import { ServerRoutesEnum } from '@/core/entities/server-routes-enum'
 
 export class Server {
-  private app = fastify()
+  private readonly app = fastify()
+  private readonly JWT_SECRET = env.JWT_SECRET
+  private readonly PORT = env.PORT
 
   public start(): void {
     this.registerJWT()
@@ -17,31 +21,31 @@ export class Server {
 
   private registerJWT() {
     this.app.register(fastifyJwt, {
-      secret: '5ASD5645498DCCXSF',
+      secret: this.JWT_SECRET,
     })
   }
 
   private registerSessionRoutes(): void {
     this.app.register(new SessionRoutes().register, {
-      prefix: '/sessions',
+      prefix: ServerRoutesEnum.SESSIONS,
     })
   }
 
   private registerPetRoutes(): void {
     this.app.register(new PetsRoutes().register, {
-      prefix: '/pets',
+      prefix: ServerRoutesEnum.PETS,
     })
   }
 
   private registerOrgRoutes(): void {
     this.app.register(new OrgsRoutes().register, {
-      prefix: '/orgs',
+      prefix: ServerRoutesEnum.ORGS,
     })
   }
 
   private async listen(): Promise<void> {
     try {
-      await this.app.listen({ port: 3333 })
+      await this.app.listen({ port: this.PORT })
       console.log('🚀 Server started on port 3333')
     } catch (error) {
       console.log(error)
