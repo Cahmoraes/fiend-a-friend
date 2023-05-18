@@ -32,7 +32,6 @@ export class FindManyPetsController {
   }
 
   private async fetchPets(searchDTO: PetSchemaData) {
-    console.log(searchDTO)
     const findManyPetsUseCase = makePrismaFetchPetsUseCase()
     return findManyPetsUseCase.execute(searchDTO)
   }
