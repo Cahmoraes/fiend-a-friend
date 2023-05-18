@@ -37,6 +37,6 @@ export class FindManyPetsController {
   }
 
   private createPetsDTO(pets: Pet[]) {
-    return pets.map((pet) => PetAdapter.adaptToDTO(pet))
+    return pets.map((pet) => PetAdapter.toDTO(pet))
   }
 }

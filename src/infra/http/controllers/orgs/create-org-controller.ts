@@ -25,7 +25,7 @@ export class CreateOrgController {
   public async intercept(request: FastifyRequest, reply: FastifyReply) {
     const orgDTO = this.parseBodySchemaOrThrow(request.body)
     const { org } = await this.createOrg(orgDTO)
-    const orgDTOResponse = OrgAdapter.adaptToDTO(org)
+    const orgDTOResponse = OrgAdapter.toDTO(org)
     return reply.send({ org: orgDTOResponse })
   }
 
@@ -34,7 +34,7 @@ export class CreateOrgController {
   }
 
   private async createOrg(orgDTO: CreateOrgData) {
-    const org = OrgAdapter.adaptToEntity(orgDTO)
+    const org = OrgAdapter.toEntity(orgDTO)
     const createOrgUseCase = new CreateOrgUseCase(new PrismaOrgsRepository())
     return createOrgUseCase.execute(org)
   }

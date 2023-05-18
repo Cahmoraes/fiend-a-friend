@@ -1,7 +1,8 @@
-import { UniqueEntityId } from '@/core/entities/value-objects/unique-entity-id'
 import { Pet, Size } from '@/domain/enterprise/entities/pet'
 import { OrgsRepository } from '@/domain/repositories/orgs-repository'
 import { PetsRepository } from '@/domain/repositories/pets-repository'
+import { OrgNotFoundError } from './errors/org-not-found-error'
+import { PetAdapter } from '@/core/entities/pet-adapter'
 
 interface CreatePetUseCaseRequest {
   orgId: string
@@ -24,21 +25,21 @@ export class CreatePetUseCase {
   async execute(
     request: CreatePetUseCaseRequest,
   ): Promise<CreatePetUseCaseResponse> {
-    const org = await this.findOrgByIdOrThrow(request.orgId)
-    const pet = Pet.create({
-      ...request,
-      orgId: new UniqueEntityId(org.id.value),
-    })
-
+    await this.findOrgByIdOrThrow(request.orgId)
+    const pet = this.createPetFromDTO(request)
     await this.petsRepository.create(pet)
     return { pet }
   }
 
   private async findOrgByIdOrThrow(orgId: string) {
     const org = await this.orgsRepository.findById(orgId)
-    if (!org) {
-      throw new Error('Org not found')
-    }
+    if (!org) throw new OrgNotFoundError()
     return org
+  }
+
+  private createPetFromDTO(request: CreatePetUseCaseRequest): Pet {
+    return PetAdapter.toEntity({
+      ...request,
+    })
   }
 }

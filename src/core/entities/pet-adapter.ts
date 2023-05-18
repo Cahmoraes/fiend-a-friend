@@ -12,7 +12,7 @@ interface PetDTO {
 }
 
 export class PetAdapter {
-  static adaptToEntity(aPetDTO: Optional<PetDTO, 'id'>): Pet {
+  static toEntity(aPetDTO: Optional<PetDTO, 'id'>): Pet {
     return Pet.create(
       {
         age: aPetDTO.age,
@@ -25,7 +25,7 @@ export class PetAdapter {
     )
   }
 
-  static adaptToDTO(aPet: Pet): PetDTO {
+  static toDTO(aPet: Pet): PetDTO {
     return {
       age: aPet.age,
       description: aPet.description,

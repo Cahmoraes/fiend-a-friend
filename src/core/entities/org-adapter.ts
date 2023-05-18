@@ -11,7 +11,7 @@ interface OrgDTO {
 }
 
 export class OrgAdapter {
-  static adaptToEntity(orgDTO: Optional<OrgDTO, 'id'>): Org {
+  static toEntity(orgDTO: Optional<OrgDTO, 'id'>): Org {
     return Org.create(
       {
         city: orgDTO.city,
@@ -23,7 +23,7 @@ export class OrgAdapter {
     )
   }
 
-  static adaptToDTO(org: Org): OrgDTO {
+  static toDTO(org: Org): OrgDTO {
     return {
       id: org.id.value,
       city: org.city,

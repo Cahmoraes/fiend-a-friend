@@ -27,7 +27,7 @@ export class CreatePetController {
     const user = request.user
     console.log(user)
     const { pet } = await this.createPet(petRequestDTO)
-    const petResponseDTO = PetAdapter.adaptToDTO(pet)
+    const petResponseDTO = PetAdapter.toDTO(pet)
     return reply.send({ pet: petResponseDTO })
   }
 
