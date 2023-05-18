@@ -5,6 +5,7 @@ import {
   PetsRepository,
 } from '@/domain/repositories/pets-repository'
 import { prisma } from '../prisma'
+import { Pet as PetDTO } from '@prisma/client'
 
 export class PrismaPetsRepository implements PetsRepository {
   async create(aPet: Pet): Promise<Pet> {
@@ -42,19 +43,23 @@ export class PrismaPetsRepository implements PetsRepository {
       },
     })
 
-    const pets = petsDTO.map((petDTO) =>
-      Pet.create(
-        {
-          age: petDTO.age,
-          description: petDTO.description,
-          name: petDTO.name,
-          size: petDTO.size as Size,
-          orgId: new UniqueEntityId(petDTO.orgId),
-        },
-        new UniqueEntityId(petDTO.id),
-      ),
-    )
+    return this.createPetsFromDTO(petsDTO)
+  }
 
-    return pets
+  private createPetsFromDTO(petsDTO: PetDTO[]): Pet[] {
+    return petsDTO.map(this.createPetFromDTO)
+  }
+
+  private createPetFromDTO(petDTO: PetDTO): Pet {
+    return Pet.create(
+      {
+        age: petDTO.age,
+        description: petDTO.description,
+        name: petDTO.name,
+        size: petDTO.size as Size,
+        orgId: new UniqueEntityId(petDTO.orgId),
+      },
+      new UniqueEntityId(petDTO.id),
+    )
   }
 }
