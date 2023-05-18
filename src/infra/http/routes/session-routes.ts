@@ -9,11 +9,11 @@ export class SessionRoutes {
     this.bindMethod()
   }
 
-  private bindMethod() {
+  private bindMethod(): void {
     this.register = this.register.bind(this)
   }
 
-  public async register(app: FastifyInstance) {
+  public async register(app: FastifyInstance): Promise<void> {
     this.app = app
     this.registerCreateSession()
   }
@@ -27,7 +27,7 @@ export class SessionRoutes {
     this._app = other
   }
 
-  private registerCreateSession() {
+  private registerCreateSession(): void {
     this.app.post('/', new CreateSessionController().intercept)
   }
 }

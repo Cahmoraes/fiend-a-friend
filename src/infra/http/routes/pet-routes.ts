@@ -15,7 +15,7 @@ export class PetsRoutes {
     this.register = this.register.bind(this)
   }
 
-  public async register(app: FastifyInstance) {
+  public async register(app: FastifyInstance): Promise<void> {
     this.app = app
     this.registerCreatePet()
     this.registerFindManyPetByCity()
@@ -30,7 +30,7 @@ export class PetsRoutes {
     this._app = other
   }
 
-  private registerCreatePet() {
+  private registerCreatePet(): void {
     this.app.post(
       '/',
       {
@@ -40,7 +40,7 @@ export class PetsRoutes {
     )
   }
 
-  private registerFindManyPetByCity() {
+  private registerFindManyPetByCity(): void {
     this.app.get('/', new FindManyPetsController().intercept)
   }
 }

@@ -1,6 +1,5 @@
 import { OrgAdapter } from '@/core/entities/org-adapter'
-import { CreateOrgUseCase } from '@/domain/application/use-cases/create-org'
-import { PrismaOrgsRepository } from '@/infra/repositories/prisma-orgs-repository'
+import { makePrismaCreateOrgUseCase } from '@/infra/factories/make-prisma-create-org-use-case'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 
@@ -24,9 +23,8 @@ export class CreateOrgController {
 
   public async intercept(request: FastifyRequest, reply: FastifyReply) {
     const orgDTO = this.parseBodySchemaOrThrow(request.body)
-    const { org } = await this.createOrg(orgDTO)
-    const orgDTOResponse = OrgAdapter.toDTO(org)
-    return reply.send({ org: orgDTOResponse })
+    const org = await this.createOrg(orgDTO)
+    return reply.send({ org: OrgAdapter.toDTO(org) })
   }
 
   private parseBodySchemaOrThrow(body: unknown): CreateOrgData {
@@ -34,8 +32,8 @@ export class CreateOrgController {
   }
 
   private async createOrg(orgDTO: CreateOrgData) {
-    const org = OrgAdapter.toEntity(orgDTO)
-    const createOrgUseCase = new CreateOrgUseCase(new PrismaOrgsRepository())
-    return createOrgUseCase.execute(org)
+    const createOrgUseCase = makePrismaCreateOrgUseCase()
+    const { org } = await createOrgUseCase.execute(OrgAdapter.toEntity(orgDTO))
+    return org
   }
 }

@@ -27,11 +27,12 @@ export class FindManyPetsController {
     return reply.send({ pets: petsDTO })
   }
 
-  private parseQuerySchemaOrThrow(body: unknown): PetSchemaData {
-    return createPetSchema.parse(body)
+  private parseQuerySchemaOrThrow(query: unknown): PetSchemaData {
+    return createPetSchema.parse(query)
   }
 
   private async fetchPets(searchDTO: PetSchemaData) {
+    console.log(searchDTO)
     const findManyPetsUseCase = makePrismaFetchPetsUseCase()
     return findManyPetsUseCase.execute(searchDTO)
   }

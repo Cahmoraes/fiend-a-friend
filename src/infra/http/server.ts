@@ -1,10 +1,11 @@
-import fastify from 'fastify'
+import fastify, { FastifyError, FastifyReply, FastifyRequest } from 'fastify'
 import fastifyJwt from '@fastify/jwt'
 import { PetsRoutes } from './routes/pet-routes'
 import { OrgsRoutes } from './routes/org-routes'
 import { SessionRoutes } from './routes/session-routes'
 import { env } from '@/env'
 import { ServerRoutesEnum } from '@/core/entities/server-routes-enum'
+import { ZodError } from 'zod'
 
 export class Server {
   private readonly app = fastify()
@@ -13,6 +14,7 @@ export class Server {
 
   public start(): void {
     this.registerJWT()
+    this.registerErrorHandler()
     this.registerSessionRoutes()
     this.registerPetRoutes()
     this.registerOrgRoutes()
@@ -41,6 +43,24 @@ export class Server {
     this.app.register(new OrgsRoutes().register, {
       prefix: ServerRoutesEnum.ORGS,
     })
+  }
+
+  private registerErrorHandler(): void {
+    this.app.setErrorHandler(this.performErrorHandler)
+  }
+
+  private performErrorHandler(
+    error: FastifyError,
+    _request: FastifyRequest,
+    reply: FastifyReply,
+  ) {
+    if (error instanceof ZodError) {
+      return reply
+        .status(400)
+        .send({ message: 'Validation error', issues: error.format() })
+    }
+
+    return reply.status(500).send({ message: 'Internal server error.' })
   }
 
   private async listen(): Promise<void> {
