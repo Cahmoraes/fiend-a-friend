@@ -5,11 +5,17 @@ import { makePet } from 'tests/factories/make-pet'
 import { FetchPetsUseCase } from './fetch-pets'
 
 describe('Fetch Pet Use Case', () => {
-  it('should create a Pet', async () => {
-    const petsRepository = new InMemoryPetsRepository()
-    const orgsRepository = new InMemoryOrgsRepository()
-    const sut = new FetchPetsUseCase(orgsRepository, petsRepository)
+  let petsRepository: InMemoryPetsRepository
+  let orgsRepository: InMemoryOrgsRepository
+  let sut: FetchPetsUseCase
 
+  beforeEach(() => {
+    petsRepository = new InMemoryPetsRepository()
+    orgsRepository = new InMemoryOrgsRepository()
+    sut = new FetchPetsUseCase(orgsRepository, petsRepository)
+  })
+
+  it('should create a Pet', async () => {
     const org = makeOrg()
     await orgsRepository.create(org)
 
@@ -21,12 +27,14 @@ describe('Fetch Pet Use Case', () => {
 
     const { pets } = await sut.execute({
       city: 'Osasco',
+      size: 'small',
     })
 
     expect(pets).toBeDefined()
     expect(petsRepository.items.size).toBe(1)
     expect(orgsRepository.items.size).toBe(1)
     expect(petsRepository.items.toArray()[0].orgId.value).toBe(org.id.value)
+    console.log(pets)
     expect(pets).toMatchObject([
       expect.objectContaining({
         name: pet.name,

@@ -24,8 +24,6 @@ export class CreatePetController {
 
   public async intercept(request: FastifyRequest, reply: FastifyReply) {
     const petRequestDTO = this.parseBodySchemaOrThrow(request.body)
-    const user = request.user
-    console.log(user)
     const { pet } = await this.createPet(petRequestDTO)
     const petResponseDTO = PetAdapter.toDTO(pet)
     return reply.send({ pet: petResponseDTO })

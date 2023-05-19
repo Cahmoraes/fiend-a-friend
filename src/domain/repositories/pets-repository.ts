@@ -1,6 +1,6 @@
 import { Pet, Size } from '../enterprise/entities/pet'
 
-export interface FindManyParams {
+export interface FindManyParams extends Partial<Pet> {
   size?: Size
 }
 

@@ -2,10 +2,15 @@ import { InMemoryOrgsRepository } from 'tests/repositories/in-memory-orgs-reposi
 import { CreateOrgUseCase } from './create-org'
 
 describe('Create Org Use Case', () => {
-  it('should create an Org', async () => {
-    const orgsRepository = new InMemoryOrgsRepository()
-    const sut = new CreateOrgUseCase(orgsRepository)
+  let orgsRepository: InMemoryOrgsRepository
+  let sut: CreateOrgUseCase
 
+  beforeEach(() => {
+    orgsRepository = new InMemoryOrgsRepository()
+    sut = new CreateOrgUseCase(orgsRepository)
+  })
+
+  it('should create an Org', async () => {
     const { org } = await sut.execute({
       city: 'Osasco',
       email: 'osasco@mail.com',

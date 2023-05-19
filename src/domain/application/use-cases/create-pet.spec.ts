@@ -4,12 +4,19 @@ import { makeOrg } from 'tests/factories/make-org'
 import { InMemoryOrgsRepository } from 'tests/repositories/in-memory-orgs-repository'
 
 describe('Create Pet Use Case', () => {
-  it('should create a Pet', async () => {
-    const petsRepository = new InMemoryPetsRepository()
-    const sut = new CreatePetUseCase(petsRepository)
+  let petsRepository: InMemoryPetsRepository
+  let orgsRepository: InMemoryOrgsRepository
+  let sut: CreatePetUseCase
 
+  beforeEach(() => {
+    petsRepository = new InMemoryPetsRepository()
+    orgsRepository = new InMemoryOrgsRepository()
+    sut = new CreatePetUseCase(petsRepository, orgsRepository)
+  })
+
+  it('should create a Pet', async () => {
     const org = makeOrg()
-    new InMemoryOrgsRepository().create(org)
+    await orgsRepository.create(org)
 
     const { pet } = await sut.execute({
       age: 7,

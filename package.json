@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx --watch ./src/main.ts",
+    "dev": "tsx  ./src/main.ts",
     "test": "vitest"
   },
   "keywords": [],
@@ -21,7 +21,7 @@
     "vitest-tsconfig-paths": "^3.4.1"
   },
   "dependencies": {
-    "@cahmoraes93/extended-set": "^1.1.0",
+    "@cahmoraes93/extended-set": "^1.1.1",
     "@fastify/jwt": "^6.7.1",
     "@fastify/multipart": "^7.6.0",
     "@fastify/static": "^6.10.1",
