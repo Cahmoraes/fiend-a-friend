@@ -1,6 +1,7 @@
 import { Org } from '@/domain/enterprise/entities/org'
 import { OrgsRepository } from '@/domain/repositories/orgs-repository'
 import { compare } from 'bcryptjs'
+import { InvalidCredentialsError } from './errors/invalid-credentails-error'
 
 interface CreateSessionUseCaseRequest {
   email: string
@@ -25,7 +26,7 @@ export class CreateSessionUseCase {
   private async findOrgByEmailOrThrow(email: string) {
     const orgOrNull = await this.orgsRepository.findByEmail(email)
     if (!orgOrNull) {
-      throw new Error('Invalid credentials')
+      throw new InvalidCredentialsError()
     }
     return orgOrNull
   }
@@ -36,7 +37,7 @@ export class CreateSessionUseCase {
   ): Promise<void> {
     const isSamePassword = await compare(password, orgHashedPassword)
     if (!isSamePassword) {
-      throw new Error('Invalid credentials')
+      throw new InvalidCredentialsError()
     }
   }
 }
