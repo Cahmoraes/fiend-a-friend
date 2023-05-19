@@ -1,6 +1,7 @@
 import { Org } from '@/domain/enterprise/entities/org'
 import { OrgsRepository } from '@/domain/repositories/orgs-repository'
 import { hash } from 'bcryptjs'
+import { UserAlreadyExists } from './errors/user-already-exists-error'
 
 interface CreateOrgUseCaseRequest {
   email: string
@@ -37,7 +38,7 @@ export class CreateOrgUseCase {
   ): Promise<void> {
     const orgOrNull = await this.orgsRepository.findByEmail(email)
     if (orgOrNull) {
-      throw new Error('Invalid credentials')
+      throw new UserAlreadyExists()
     }
   }
 
