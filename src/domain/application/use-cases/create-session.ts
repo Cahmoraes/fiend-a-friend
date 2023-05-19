@@ -1,5 +1,6 @@
 import { Org } from '@/domain/enterprise/entities/org'
 import { OrgsRepository } from '@/domain/repositories/orgs-repository'
+import { compare } from 'bcryptjs'
 
 interface CreateSessionUseCaseRequest {
   email: string
@@ -16,12 +17,12 @@ export class CreateSessionUseCase {
   async execute(
     request: CreateSessionUseCaseRequest,
   ): Promise<CreateSessionUseCaseResponse> {
-    const org = await this.findOrgByEmail(request.email)
-    this.validatePasswordOrThrow(org, request.password)
+    const org = await this.findOrgByEmailOrThrow(request.email)
+    await this.validatePasswordsOrThrow(request.password, org.password)
     return { org }
   }
 
-  private async findOrgByEmail(email: string) {
+  private async findOrgByEmailOrThrow(email: string) {
     const orgOrNull = await this.orgsRepository.findByEmail(email)
     if (!orgOrNull) {
       throw new Error('Invalid credentials')
@@ -29,8 +30,12 @@ export class CreateSessionUseCase {
     return orgOrNull
   }
 
-  private validatePasswordOrThrow(anOrg: Org, password: string) {
-    if (anOrg.password !== password) {
+  private async validatePasswordsOrThrow(
+    password: string,
+    orgHashedPassword: string,
+  ): Promise<void> {
+    const isSamePassword = await compare(password, orgHashedPassword)
+    if (!isSamePassword) {
       throw new Error('Invalid credentials')
     }
   }
