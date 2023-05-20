@@ -27,7 +27,6 @@ export class FetchPetsUseCase {
     }
 
     const orgsId = orgs.map((org) => org.id.value)
-    console.log(orgsId)
     const pets = await this.petsRepository.findManyByOrgIds(orgsId, { size })
     return { pets }
   }

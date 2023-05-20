@@ -34,7 +34,7 @@ describe('Fetch Pet Use Case', () => {
     expect(petsRepository.items.size).toBe(1)
     expect(orgsRepository.items.size).toBe(1)
     expect(petsRepository.items.toArray()[0].orgId.value).toBe(org.id.value)
-    console.log(pets)
+
     expect(pets).toMatchObject([
       expect.objectContaining({
         name: pet.name,
