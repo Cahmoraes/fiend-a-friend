@@ -16,7 +16,9 @@ describe('Create Org Controller', () => {
     const request: any = {
       body: {
         city: 'Osasco',
-        size: 'medium',
+        email: 'any@emai.com',
+        password: 'any_password',
+        phone: '119789456',
       },
     }
 

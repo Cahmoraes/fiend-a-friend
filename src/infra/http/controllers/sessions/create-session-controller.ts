@@ -1,6 +1,7 @@
 import { assertIfDefined } from '@/core/utils/assertIfDefined'
 import { Org } from '@/domain/enterprise/entities/org'
-import { makePrismaCreateSessionUseCase } from '@/infra/factories/make-prisma-create-session-use-case'
+import { makeCreateSessionUseCase } from '@/infra/factories/make-create-session-use-case'
+
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 
@@ -51,7 +52,7 @@ export class CreateSessionController {
   }
 
   private performCreateSession(aSessionDTO: SessionSchemaData) {
-    const createPetUseCase = makePrismaCreateSessionUseCase()
+    const createPetUseCase = makeCreateSessionUseCase()
     return createPetUseCase.execute(aSessionDTO)
   }
 

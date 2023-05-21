@@ -71,4 +71,9 @@ export class Server {
       console.log(error)
     }
   }
+
+  public get instance() {
+    this.start()
+    return this.app
+  }
 }
