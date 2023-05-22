@@ -1,5 +1,5 @@
 import { OrgAdapter } from '@/core/entities/org-adapter'
-import { makeCreateOrgUseCase } from '@/infra/factories/make-create-org-use-case'
+import { CreateOrgUseCase } from '@/domain/application/use-cases/create-org'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 
@@ -13,8 +13,11 @@ const createOrgSchema = z.object({
 type CreateOrgData = z.infer<typeof createOrgSchema>
 
 export class CreateOrgController {
-  constructor() {
+  private createOrgUseCase: CreateOrgUseCase
+
+  constructor(makeCreateOrgUseCase: () => CreateOrgUseCase) {
     this.bindMethod()
+    this.createOrgUseCase = makeCreateOrgUseCase()
   }
 
   private bindMethod() {
@@ -32,8 +35,9 @@ export class CreateOrgController {
   }
 
   private async createOrg(orgDTO: CreateOrgData) {
-    const createOrgUseCase = makeCreateOrgUseCase()
-    const { org } = await createOrgUseCase.execute(OrgAdapter.toEntity(orgDTO))
+    const { org } = await this.createOrgUseCase.execute(
+      OrgAdapter.toEntity(orgDTO),
+    )
     return org
   }
 }

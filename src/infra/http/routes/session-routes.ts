@@ -1,6 +1,7 @@
 import { assertIfDefined } from '@/core/utils/assertIfDefined'
 import { FastifyInstance } from 'fastify'
 import { CreateSessionController } from '../controllers/sessions/create-session-controller'
+import { makeCreateSessionUseCase } from '@/infra/factories/make-create-session-use-case'
 
 export class SessionRoutes {
   private _app?: FastifyInstance
@@ -28,6 +29,9 @@ export class SessionRoutes {
   }
 
   private registerCreateSession(): void {
-    this.app.post('/', new CreateSessionController().intercept)
+    this.app.post(
+      '/',
+      new CreateSessionController(makeCreateSessionUseCase).intercept,
+    )
   }
 }

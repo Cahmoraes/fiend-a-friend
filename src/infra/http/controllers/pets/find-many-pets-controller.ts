@@ -1,6 +1,6 @@
 import { PetAdapter } from '@/core/entities/pet-adapter'
+import { FetchPetsUseCase } from '@/domain/application/use-cases/fetch-pets'
 import { Pet } from '@/domain/enterprise/entities/pet'
-import { makeFetchPetsUseCase } from '@/infra/factories/make-fetch-pets-use-case'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 
@@ -12,8 +12,11 @@ const createPetSchema = z.object({
 type PetSchemaData = z.infer<typeof createPetSchema>
 
 export class FindManyPetsController {
-  constructor() {
+  private FetchPetsUseCase: FetchPetsUseCase
+
+  constructor(makeFetchPetsUseCase: () => FetchPetsUseCase) {
     this.bindMethod()
+    this.FetchPetsUseCase = makeFetchPetsUseCase()
   }
 
   private bindMethod() {
@@ -32,8 +35,7 @@ export class FindManyPetsController {
   }
 
   private async fetchPets(searchDTO: PetSchemaData) {
-    const findManyPetsUseCase = makeFetchPetsUseCase()
-    return findManyPetsUseCase.execute(searchDTO)
+    return this.FetchPetsUseCase.execute(searchDTO)
   }
 
   private createPetsDTO(pets: Pet[]) {

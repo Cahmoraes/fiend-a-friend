@@ -1,6 +1,7 @@
 import { assertIfDefined } from '@/core/utils/assertIfDefined'
 import { FastifyInstance } from 'fastify'
 import { CreateOrgController } from '../controllers/orgs/create-org-controller'
+import { makeCreateOrgUseCase } from '@/infra/factories/make-create-org-use-case'
 
 export class OrgsRoutes {
   private _app?: FastifyInstance
@@ -28,6 +29,6 @@ export class OrgsRoutes {
   }
 
   private registerCreateOrg() {
-    this.app.post('/', new CreateOrgController().intercept)
+    this.app.post('/', new CreateOrgController(makeCreateOrgUseCase).intercept)
   }
 }

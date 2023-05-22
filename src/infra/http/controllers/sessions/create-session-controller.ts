@@ -1,6 +1,6 @@
 import { assertIfDefined } from '@/core/utils/assertIfDefined'
+import { CreateSessionUseCase } from '@/domain/application/use-cases/create-session'
 import { Org } from '@/domain/enterprise/entities/org'
-import { makeCreateSessionUseCase } from '@/infra/factories/make-create-session-use-case'
 
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
@@ -14,8 +14,11 @@ type SessionSchemaData = z.infer<typeof createSessionSchema>
 
 export class CreateSessionController {
   private _reply?: FastifyReply
-  constructor() {
+  private createSessionUseCase: CreateSessionUseCase
+
+  constructor(makeCreateSessionUseCase: () => CreateSessionUseCase) {
     this.bindMethod()
+    this.createSessionUseCase = makeCreateSessionUseCase()
   }
 
   private bindMethod() {
@@ -52,8 +55,7 @@ export class CreateSessionController {
   }
 
   private performCreateSession(aSessionDTO: SessionSchemaData) {
-    const createPetUseCase = makeCreateSessionUseCase()
-    return createPetUseCase.execute(aSessionDTO)
+    return this.createSessionUseCase.execute(aSessionDTO)
   }
 
   private createJWT(reply: FastifyReply, org: Org): Promise<string> {

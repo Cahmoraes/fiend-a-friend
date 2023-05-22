@@ -2,7 +2,9 @@ import { assertIfDefined } from '@/core/utils/assertIfDefined'
 import { FastifyInstance } from 'fastify'
 import { CreatePetController } from '../controllers/pets/create-pet-controller'
 import { FindManyPetsController } from '../controllers/pets/find-many-pets-controller'
-import { jwtAuth } from '../midllewares/jwt-auth'
+import { jwtAuth } from '../middlewares/jwt-auth'
+import { makeFetchPetsUseCase } from '@/infra/factories/make-fetch-pets-use-case'
+import { makeCreatePetUseCase } from '@/infra/factories/make-create-pet-use-case'
 
 export class PetsRoutes {
   private _app?: FastifyInstance
@@ -36,11 +38,14 @@ export class PetsRoutes {
       {
         onRequest: [jwtAuth],
       },
-      new CreatePetController().intercept,
+      new CreatePetController(makeCreatePetUseCase).intercept,
     )
   }
 
   private registerFindManyPetByCity(): void {
-    this.app.get('/', new FindManyPetsController().intercept)
+    this.app.get(
+      '/',
+      new FindManyPetsController(makeFetchPetsUseCase).intercept,
+    )
   }
 }

@@ -1,6 +1,5 @@
 import { PetAdapter } from '@/core/entities/pet-adapter'
-import { makeCreatePetUseCase } from '@/infra/factories/make-create-pet-use-case'
-
+import { CreatePetUseCase } from '@/domain/application/use-cases/create-pet'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 
@@ -15,8 +14,11 @@ const createPetSchema = z.object({
 type PetSchemaData = z.infer<typeof createPetSchema>
 
 export class CreatePetController {
-  constructor() {
+  private createPetUseCase: CreatePetUseCase
+
+  constructor(makeCreatePetUseCase: () => CreatePetUseCase) {
     this.bindMethod()
+    this.createPetUseCase = makeCreatePetUseCase()
   }
 
   private bindMethod() {
@@ -35,7 +37,6 @@ export class CreatePetController {
   }
 
   private async createPet(aPetDTO: PetSchemaData) {
-    const createPetUseCase = makeCreatePetUseCase()
-    return createPetUseCase.execute(aPetDTO)
+    return this.createPetUseCase.execute(aPetDTO)
   }
 }

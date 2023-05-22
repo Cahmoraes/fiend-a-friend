@@ -3,7 +3,6 @@ import { makeInMemoryFetchPetsUseCase } from './in-memory/make-in-memory-fetch-p
 import { makePrismaFetchPetsUseCase } from './prisma/make-prisma-fetch-pets-use-case'
 
 export function makeFetchPetsUseCase() {
-  console.log('isTestEnvironment', isTestEnvironment())
   return isTestEnvironment()
     ? makeInMemoryFetchPetsUseCase()
     : makePrismaFetchPetsUseCase()
