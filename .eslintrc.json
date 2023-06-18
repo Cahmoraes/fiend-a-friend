@@ -8,6 +8,18 @@
   },
   "rules": {
     "no-useless-constructor": "off",
-    "camelcase": "off"
+    "camelcase": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "arrowParens": "always",
+        "printWidth": 80,
+        "singleQuote": true,
+        "trailingComma": "all",
+        "semi": false,
+        "endOfLine": "auto",
+        "tabWidth": 2
+      }
+    ]
   }
 }

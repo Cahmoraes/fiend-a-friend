@@ -2,6 +2,8 @@ import { Org } from '@/domain/enterprise/entities/org'
 import { OrgsRepository } from '@/domain/repositories/orgs-repository'
 import { hash } from 'bcryptjs'
 import { UserAlreadyExists } from './errors/user-already-exists-error'
+import { OrgPublisher } from '@/domain/enterprise/events/orgs/org-publisher'
+import { OrgCreated } from '@/domain/enterprise/events/orgs/org-created'
 
 interface CreateOrgUseCaseRequest {
   email: string
@@ -30,6 +32,8 @@ export class CreateOrgUseCase {
     })
 
     await this.orgsRepository.create(org)
+    OrgPublisher.instance().notify(new OrgCreated(org.id))
+
     return { org }
   }
 
